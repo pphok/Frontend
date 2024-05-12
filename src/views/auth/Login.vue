@@ -42,6 +42,23 @@ const alertTextClasses = computed(() => {
     };
 });
 
+const LoginGoogle = async () => {
+    const store = useAuthStore();
+    await store.LoginWithGoogle();
+    if (store.error) {
+        showAlertMessage(store.error, 'error');
+        return;
+    }
+    if (store.data?.status == 'INACTIVE') {
+        router.push('/verify');
+        return;
+    }
+    // Successful login
+    showAlertMessage('Login successful', 'success');
+    // Redirect to another page
+    router.push('/');
+};
+
 const submitForm = async () => {
     // Clear previous errors
     errors.value = {};
@@ -62,6 +79,10 @@ const submitForm = async () => {
             await store.Login(formData.value);
             if (store.error) {
                 showAlertMessage(store.error, 'error');
+                return;
+            }
+            if (store.data?.status == 'INACTIVE') {
+                router.push('/verify');
                 return;
             }
             // Successful login
@@ -135,7 +156,7 @@ const hideAlertMessage = () => {
                         <b>OR</b>
                     </Divider>
                     <div class="login-form">
-                        <Button class="google-button pt-3 pb-3 mr-2 mb-2 mt-5">
+                        <Button class="google-button pt-3 pb-3 mr-2 mb-2 mt-5" @click="LoginGoogle">
                             <div class="w-full google flex justify-content-center align-item-center">
                                 <img src="/layout/images/google.svg" alt="Google" class="mr-2" width="20" />
                                 Google

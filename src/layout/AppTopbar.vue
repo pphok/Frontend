@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
+import { useClassRecordStore } from '@/store/class';
 const router = useRouter();
 
 const { layoutConfig, onMenuToggle } = useLayout();
@@ -12,7 +13,18 @@ const menu = ref(null);
 const profileMenu = ref(null);
 const display = ref(false);
 const topbarMenuActive = ref(false);
+const formData = ref({
+    title: '',
+    subject: '',
+    room: '',
+    section: ''
+});
+const error = ref({
+    title: undefined
+});
+
 const store = useAuthStore();
+const classStore = useClassRecordStore();
 
 const overlayMenuItems = ref([
     {
@@ -44,9 +56,6 @@ const overlayMenuProfileItems = ref([
 ]);
 const user_profile = () => {
     router.push('/profileuser');
-};
-const logout = () => {
-    router.push('/login');
 };
 
 const toggleMenu = (event) => {
@@ -114,6 +123,20 @@ const isOutsideClicked = (event) => {
 
     return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
+const onSubmit = async () => {
+    error.value = {};
+    if (!formData.value.title) {
+        error.value.title = 'Title is required';
+        return;
+    }
+    await classStore.CreateOrUpdate(formData.value);
+    if (classStore.error) {
+        console.log(classStore.error);
+        return;
+    }
+    close();
+    router.push('/class');
+};
 </script>
 
 <template>
@@ -123,35 +146,57 @@ const isOutsideClicked = (event) => {
         </button>
 
         <router-link to="/" class="layout-topbar-logo">
-            <img :src="logoUrl" alt="logo" class="w-5 h-auto" />
+            <img :src="logoUrl" alt="logo" class="w-8rem h-auto" />
         </router-link>
 
         <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()">
             <i class="pi pi-ellipsis-v"></i>
         </button>
 
-        <InputText type="text" placeholder="Search" class="layout-topbar-search"></InputText>
+        <!-- <InputText type="text" placeholder="Search" class="layout-topbar-search"></InputText> -->
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             <Dialog header="Create Class" v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw' }" :modal="true">
                 <form action="" style="width: 100%">
                     <div class="mb-4">
-                        <input type="text" id="class1" name="class1" style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none" placeholder="Class Name (require)" />
+                        <input
+                            type="text"
+                            v-model="formData.title"
+                            id="class1"
+                            name="class1"
+                            style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none"
+                            placeholder="Class Name (require)"
+                        />
+                        <small v-if="error.title" id="email-help" class="p-error">{{ error.title }}</small>
                     </div>
                     <div class="mb-4">
-                        <input type="text" id="class2" name="class2" style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none" placeholder="Section (optional)" />
+                        <input
+                            type="text"
+                            v-model="formData.section"
+                            id="class2"
+                            name="class2"
+                            style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none"
+                            placeholder="Section (optional)"
+                        />
                     </div>
                     <div class="mb-4">
-                        <input type="text" id="class3" name="class3" style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none" placeholder="Subject (optional)" />
+                        <input
+                            type="text"
+                            v-model="formData.subject"
+                            id="class3"
+                            name="class3"
+                            style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none"
+                            placeholder="Subject (optional)"
+                        />
                     </div>
                     <div class="mb-4">
-                        <input type="text" id="class4" name="class4" style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none" placeholder="Room (optional)" />
+                        <input type="text" v-model="formData.room" id="class4" name="class4" style="border: 1px solid #b6b0b0; padding: 12px; border-radius: 15px; background-color: #f1f1f1; width: 100%; border: none" placeholder="Room (optional)" />
                     </div>
                 </form>
                 <template #footer>
                     <Button label="Cancel" @click="close" class="p-button-outlined p-button-text main-button" style="background-color: white; color: black; border: 1px solid white" />
 
-                    <Button label="Create" @click="close" class="p-button-outlined main-button" />
+                    <Button label="Create" @click="onSubmit" class="p-button-outlined main-button" />
                 </template>
             </Dialog>
             <Menu ref="menu" :model="overlayMenuItems" :popup="true" style="position: fixed" />

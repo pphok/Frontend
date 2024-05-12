@@ -1,126 +1,61 @@
-<script>
-export default {
-    data() {
-        return {
-            title: 'Class Code',
-            copyTextValue: '#####',
-            isInputReadOnly: true,
-            students: [
-                {
-                    name: 'Alice Johnson',
-                    email: 'alicejohnson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
+<script setup>
+import { ref } from 'vue';
 
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                },
-                {
-                    name: 'Bob Anderson',
-                    email: 'bobanderson@example.com',
-                    profileImage: 'path_to_profile_image.jpg'
-                }
-
-                // Add more student objects as needed
-            ],
-            selectedStudent: null
-        };
+const title = 'Class Code';
+const copyTextValue = ref('#####');
+const isInputReadOnly = ref(true);
+const students = ref([
+    {
+        name: 'Alice Johnson',
+        email: 'alicejohnson@example.com',
+        profileImage: 'path_to_profile_image.jpg'
     },
-    methods: {
-        copyText() {
-            // Get the text field
-            const copyText = document.querySelector('.copy-input');
-
-            // Select the text field
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            document.execCommand('copy');
-
-            // Alert the copied text
-            alert('Copied the text: ' + copyText.value);
-        },
-        updateLength(event) {
-            // Handle input length update
-        },
-        search() {
-            // Handle search
-        },
-        changeRole(student) {
-            // Function to handle changing the user's role
-            console.log('Changing Role for student:', student.name);
-        },
-        changeProfile(student) {
-            // Function to handle changing the user's profile
-            console.log('Changing Profile for student:', student.name);
-        },
-        toggleDropdown(index) {
-            if (this.selectedStudent === index) {
-                this.selectedStudent = null; // Hide dropdown if already selected
-            } else {
-                this.selectedStudent = index; // Show dropdown for selected student
-            }
-        }
+    {
+        name: 'Alice Johnson',
+        email: 'alicejohnson@example.com',
+        profileImage: 'path_to_profile_image.jpg'
     }
+    // Add more student objects as needed
+]);
+const peopleMenu = ref([]);
+
+const overlayPeopleMenuItems = ref([
+    {
+        label: 'Change Role',
+        icon: 'fas fa-user',
+        command: () => {}
+    },
+    {
+        label: 'Remove',
+        icon: 'fas fa-trash',
+        command: () => {}
+    }
+]);
+
+const togglePeopleMenu = (event, index) => {
+    peopleMenu.value[index].toggle(event);
+};
+
+const copyText = () => {
+    const copyText = document.querySelector('.copy-input');
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    alert('Copied the text: ' + copyText.value);
+};
+
+const updateLength = (event) => {
+    console.log(event);
+};
+
+const search = () => {
+    // Handle search
 };
 </script>
 
 <template>
-    <div class="container">
-        <div class="search-grid">
+    <div class="grid grid-nogutter">
+        <div class="col-9 search-grid w-full" style="border-right: 1px solid #ddd">
             <div class="search-container">
                 <input type="text" placeholder="Invite people by email" class="search-input" @input="updateLength" />
                 <button @click="search" class="search-button">Search</button>
@@ -131,46 +66,42 @@ export default {
                     <h4>{{ students.length }} Students</h4>
                     <hr class="divider1" />
                 </div>
-                <div id="app">
-                    <div v-for="(student, index) in students" :key="index" class="profile-box">
+                <div id="app" class="scrollable-container">
+                    <div v-for="(student, index) in students" :key="index" class="profile-box p-3">
                         <div class="profile-info">
-                            <div class="profile-image">
+                            <!-- <div class="profile-image">
                                 <img :src="student.profileImage" />
                             </div>
                             <div class="profile-details-name">
                                 <p>{{ student.name }}</p>
-                            </div>
-                            <div class="profile-details-email">
-                                <a :href="'mailto:' + student.email" class="profile-details-email" style="color: #2281b6">{{ student.email }}</a>
-                            </div>
+                            </div> -->
+                            <Avatar :image="`https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&dpr=1`" shape="circle" />
+                            <span class="font-bold ml-2">{{ student.name }}</span>
                         </div>
-                        <div class="options">
-                            <div><span class="dot" @click="toggleDropdown(index)"></span></div>
-                            <div><span class="dot" @click="toggleDropdown(index)"></span></div>
-                            <div><span class="dot" @click="toggleDropdown(index)"></span></div>
-
-                            <div class="options-dropdown" v-if="selectedStudent === index" style="width: 180px; height: auto">
-                                <ul>
-                                    <li @click="changeRole(student)"><i class="fas fa-user"></i> Change Role</li>
-                                    <li @click="changeProfile(student)" class="remove"><i class="fas fa-edit" style="color:red;"></i> Remove</li>
-                                </ul>
+                        <div class="profile-details-email">
+                            <a :href="'mailto:' + student.email" class="profile-details-email" style="color: #2281b6">{{ student.email }}</a>
+                        </div>
+                        <div class="options pr-3">
+                            <div style="text-align: end">
+                                <Menu ref="peopleMenu" :model="overlayPeopleMenuItems" :popup="true" />
+                                <button type="button" @click="(e) => togglePeopleMenu(e, index)" class="p-link">
+                                    <i class="pi pi-ellipsis-v"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="divider2"></div>
-        <div class="card-grid">
-            <div class="card-container">
+        <div class="col-3">
+            <div>
                 <div class="card">
                     <p>{{ title }}</p>
                     <!-- Input field container -->
                     <div class="input-container">
                         <!-- Input field to copy from -->
                         <div class="copy-input-container">
-                            <input type="text" class="copy-input" :value="copyTextValue" :readonly="isInputReadOnly" />
+                            <input type="text" class="copy-input" v-model="copyTextValue" :readonly="isInputReadOnly" />
                             <!-- Icon to copy -->
                             <span class="fluent--copy-16-regular copy-icon" @click="copyText"></span>
                         </div>
@@ -187,6 +118,10 @@ export default {
 </template>
 
 <style scoped>
+.scrollable-container {
+    height: calc(100vh - 27rem);
+    overflow: auto;
+}
 .container {
     display: flex;
     gap: 20px;

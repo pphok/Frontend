@@ -1,4 +1,4 @@
-import axios from 'axios';
+import $api from '..';
 import { defineStore } from 'pinia';
 
 export const useMeStore = defineStore('me', {
@@ -11,7 +11,7 @@ export const useMeStore = defineStore('me', {
         async Me() {
             this.loading = true;
             try {
-                const res = await axios.get('api/me');
+                const res = await $api.get('api/me');
                 this.data = res.data;
                 this.loading = false;
             } catch (error) {

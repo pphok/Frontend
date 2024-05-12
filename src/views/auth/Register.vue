@@ -2,13 +2,17 @@
 import { useAuthStore } from '@/store/auth';
 import { ref } from 'vue';
 
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const formData = ref({
     first_name: '',
     last_name: '',
     email: '',
     password: '',
     confirm_password: '',
-    gender: ''
+    gender: 'male'
 });
 
 const errors = ref({});
@@ -65,6 +69,7 @@ const submitForm = async () => {
             return;
         }
         console.log('Form submitted successfully');
+        router.push('/verify');
         registrationSuccess.value = true;
     }
 };
@@ -201,7 +206,7 @@ function hideAlertMessage() {
     </section>
 </template>
 
-<style>
+<style scoped>
 .title {
     margin-top: 100px;
 }

@@ -40,47 +40,44 @@ const onCardClick = (index) => {
 </script>
 
 <template>
-    <div class="scrollable-container">
-        <DataView :value="dataviewValue" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
-            <template #grid="slotProps">
-                <div class="grid grid-nogutter">
-                    <div v-for="(item, index) in slotProps.items" :key="index" class="col-12 sm:col-6 md:col-4 lg:col-3 p-3">
-                        <Card style="overflow: hidden; border: 0.2px solid #1ebbd7" @click="() => onCardClick(index)">
-                            <template #header>
-                                <div class="p-4">
-                                    <div class="title flex justify-content-space-between align-item-center">
-                                        <div class="w-full">
-                                            <h3 class="text-truncated">Activity 01</h3>
-                                        </div>
-                                        <div style="text-align: end">
-                                            <Menu ref="classMenu" :model="overlayClassMenuItems" :popup="true" />
-                                            <button type="button" @click.stop="(e) => toggleClassMenu(e, index)" class="p-link">
-                                                <i class="pi pi-ellipsis-v"></i>
-                                            </button>
-                                        </div>
+    <DataView :value="dataviewValue" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField" class="p-0">
+        <template #grid="slotProps">
+            <div class="grid grid-nogutter scrollable-container p-0">
+                <div v-for="(item, index) in slotProps.items" :key="index" class="col-12 sm:col-6 md:col-4 lg:col-3 p-2">
+                    <Card style="overflow: hidden; border: 0.2px solid #1ebbd7; padding: 0" @click="() => onCardClick(index)">
+                        <template #header>
+                            <div class="p-3">
+                                <div class="title flex justify-content-space-between align-item-center">
+                                    <div class="w-full p-0">
+                                        <h3 class="text-truncated p-0">Activity 01</h3>
                                     </div>
-                                    <p class="m-0">Jan 01, 2024</p>
+                                    <div style="text-align: end">
+                                        <Menu ref="classMenu" :model="overlayClassMenuItems" :popup="true" />
+                                        <button type="button" @click.stop="(e) => toggleClassMenu(e, index)" class="p-link">
+                                            <i class="pi pi-ellipsis-v"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                <Divider layout="horizontal"></Divider>
-                            </template>
-                            <template #content>
-                                <p class="m-0 text-truncated-threeline" @click.stop="() => {}">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse,
-                                    cupiditate neque quas!
-                                </p>
-                            </template>
-                        </Card>
-                    </div>
+                                <p class="p-date">Jan 01, 2024</p>
+                            </div>
+                            <Divider layout="horizontal"></Divider>
+                        </template>
+                        <template #content>
+                            <p class="m-0 text-truncated-threeline" @click.stop="() => {}">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse,
+                                cupiditate neque quas!
+                            </p>
+                        </template>
+                    </Card>
                 </div>
-            </template>
-        </DataView>
-    </div>
+            </div>
+        </template>
+    </DataView>
 </template>
 <style lang="scss" scoped>
 .scrollable-container {
-    height: calc(100vh - 18rem);
+    height: calc(100vh - 22rem);
     overflow-y: auto;
-    padding: 1rem;
 }
 .text-truncated-threeline {
     display: -webkit-box;
@@ -100,5 +97,9 @@ const onCardClick = (index) => {
     .p-tabview-header-action {
         color: #1ebbd7;
     }
+}
+.p-date {
+    text-align: start;
+    color: grey;
 }
 </style>

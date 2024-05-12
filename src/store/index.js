@@ -5,7 +5,6 @@ const $api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:3000/api/v1', // Replace with your API base URL
     headers: {
         'Content-Type': 'application/json'
-        // Add any other headers you need here
     }
 });
 

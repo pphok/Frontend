@@ -5,6 +5,7 @@ import App from './App.vue';
 import router from './router';
 
 import PrimeVue from 'primevue/config';
+import InputOtp from 'primevue/inputotp';
 import Editor from 'primevue/editor';
 import AutoComplete from 'primevue/autocomplete';
 import Accordion from 'primevue/accordion';
@@ -224,6 +225,7 @@ app.component('TreeSelect', TreeSelect);
 app.component('TreeTable', TreeTable);
 app.component('TriStateCheckbox', TriStateCheckbox);
 app.component('VirtualScroller', VirtualScroller);
+app.component('InputOtp', InputOtp);
 
 app.use(createPinia());
 

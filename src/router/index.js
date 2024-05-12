@@ -13,30 +13,32 @@ const router = createRouter({
                     path: '/',
                     name: 'home',
                     component: () => import('@/views/frontend/pages/home/Home.vue'),
-                    
+                    meta: { requiresAuth: true }
                 },
                 {
                     path: '/class',
                     name: 'class',
                     component: () => import('@/views/frontend/pages/class/index.vue'),
-                   
+                    meta: { requiresAuth: true }
                 },
                 {
                     path: '/activity',
                     name: 'activity',
                     component: () => import('@/views/frontend/pages/activity/index.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
                     path: '/archive',
                     name: 'archive',
                     component: () => import('@/views/frontend/pages/archive/Archive.vue'),
+                    meta: { requiresAuth: true }
                 },
                 {
                     path: '/profileuser',
                     name: 'profileuser',
                     component: () => import('@/views/pages/auth/Profile_User.vue'),
+                    meta: { requiresAuth: true }
                 },
-
                 {
                     path: '/dashboard',
                     name: 'dashboard',
@@ -193,6 +195,16 @@ const router = createRouter({
             component: import('@/views/auth/Verify.vue')
         },
         {
+            path: '/verify-forget',
+            name: 'verifyForget',
+            component: import('@/views/auth/VerifyForget.vue')
+        },
+        {
+            path: '/change-password',
+            name: 'changePassword',
+            component: import('@/views/auth/ChangePassword.vue')
+        },
+        {
             path: '/resend',
             name: 'Resend',
             component: import('@/views/auth/Resend.vue')
@@ -228,7 +240,7 @@ const router = createRouter({
 
 // Global beforeRouteEnter guard to check if the user is authenticated
 router.beforeEach(async (to, from, next) => {
-    const publicRoutes = ['Login', 'Register', 'Forget', 'Digit', 'Resend', 'NotFound', 'auth'];
+    const publicRoutes = ['Login', 'Register', 'Forget', 'Resend', 'NotFound', 'auth', 'verify', 'verifyForget'];
 
     let token = Cookies.get('token');
 
